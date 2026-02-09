@@ -40,8 +40,8 @@ namespace BH_WebServicesManager
                 txtServiceName.Text = Data.ServiceName;
                 txtDisplayName.Text = Data.DisplayName;
                 txtUrl.Text = Data.Url;
-                txtGitUrl.Text = Data.GitHubUrl;
-                txtGitRepo.Text = Data.GitHubRepo;
+                txtGitUrl.Text = Data.GitUrl;
+                txtGitBranch.Text = Data.GitBranch;
                 txtGitToken.Text = Data.GitToken;
                 txtGitUser.Text = Data.GitUser;
                 txtPath.Text = Data.Path;
@@ -67,7 +67,7 @@ namespace BH_WebServicesManager
         private void SetEditorsReadOnly(bool enabled)
         {
             TextBox[] controls = { txtServiceName, txtDisplayName, txtUrl, txtGitUser,
-                txtGitUrl, txtGitRepo};
+                txtGitUrl, txtGitBranch};
 
             foreach (var c in controls)
                 c.ReadOnly = enabled;
@@ -102,7 +102,7 @@ namespace BH_WebServicesManager
                 (txtDisplayName, "Display Name"),
                 (txtUrl, "URL"),
                 (txtGitUrl, "GitHub URL"),
-                (txtGitRepo, "GitHub Repository"),
+                (txtGitBranch, "GitHub Repository"),
                 (txtGitToken, "Git User"),
                 (txtPath, "Path")
             };
@@ -141,8 +141,8 @@ namespace BH_WebServicesManager
             Data.ServiceName = txtServiceName.Text.Trim();
             Data.DisplayName = txtDisplayName.Text.Trim();
             Data.Url = txtUrl.Text.Trim();
-            Data.GitHubUrl = txtGitUrl.Text.Trim();
-            Data.GitHubRepo = txtGitRepo.Text.Trim();
+            Data.GitUrl = txtGitUrl.Text.Trim();
+            Data.GitBranch = txtGitBranch.Text.Trim();
             Data.GitUser = txtGitUser.Text.Trim();
             Data.GitToken = txtGitToken.Text.Trim();
             Data.Path = txtPath.Text.Trim();

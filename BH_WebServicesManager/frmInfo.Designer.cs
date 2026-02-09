@@ -38,7 +38,7 @@
             label4 = new Label();
             txtGitUrl = new TextBox();
             label5 = new Label();
-            txtGitRepo = new TextBox();
+            txtGitBranch = new TextBox();
             label8 = new Label();
             txtGitUser = new TextBox();
             label9 = new Label();
@@ -128,15 +128,15 @@
             label5.Name = "label5";
             label5.Size = new Size(100, 23);
             label5.TabIndex = 8;
-            label5.Text = "대상 리파지토리";
+            label5.Text = "대상 브랜치";
             label5.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // txtGitRepo
+            // txtGitBranch
             // 
-            txtGitRepo.Location = new Point(118, 199);
-            txtGitRepo.Name = "txtGitRepo";
-            txtGitRepo.Size = new Size(319, 23);
-            txtGitRepo.TabIndex = 9;
+            txtGitBranch.Location = new Point(118, 199);
+            txtGitBranch.Name = "txtGitBranch";
+            txtGitBranch.Size = new Size(319, 23);
+            txtGitBranch.TabIndex = 9;
             // 
             // label8
             // 
@@ -253,7 +253,7 @@
             Controls.Add(label9);
             Controls.Add(txtGitUser);
             Controls.Add(label8);
-            Controls.Add(txtGitRepo);
+            Controls.Add(txtGitBranch);
             Controls.Add(label5);
             Controls.Add(txtGitUrl);
             Controls.Add(label4);
@@ -285,7 +285,7 @@
         private Label label4;
         private TextBox txtGitUrl;
         private Label label5;
-        private TextBox txtGitRepo;
+        private TextBox txtGitBranch;
         private Label label8;
         private TextBox txtGitUser;
         private Label label9;

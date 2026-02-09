@@ -1,4 +1,5 @@
 ﻿using LibGit2Sharp;
+using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Net.NetworkInformation;
 using System.ServiceProcess;
@@ -223,6 +224,9 @@ namespace BH_WebServicesManager
                 // 중지될 때까지 대기 (예: 최대 30초)
                 sv.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
             }
+            EnsureClone(cData);
+            PullBranch(cData);
+            BuildProject(cData);
             //cData.Path 가 깃 저장소면 넘어가고 아니면 여기에 클론
             //
             //깃에서 코드 가져와
@@ -231,11 +235,82 @@ namespace BH_WebServicesManager
         #endregion
 
         #region 깃 관련 
+        private void EnsureClone(clsData cData)
+        {
+            if (Repository.IsValid(cData.Path))
+                return;
 
-        
+            var cloneOptions = new CloneOptions();
+
+            // ❗ FetchOptions는 이미 생성돼 있으므로 "속성만" 설정
+            cloneOptions.FetchOptions.CredentialsProvider = (_url, _user, _cred) =>
+                new UsernamePasswordCredentials
+                {
+                    Username = cData.GitUser,
+                    Password = cData.GitToken
+                };
+
+            Repository.Clone(cData.GitUrl, cData.Path, cloneOptions);
+        }
+
+        private void PullBranch(clsData cData)
+        {
+            using var repo = new Repository(cData.Path);
+
+            var fetchOptions = new FetchOptions
+            {
+                CredentialsProvider = (_url, _user, _cred) =>
+                    new UsernamePasswordCredentials
+                    {
+                        Username = cData.GitUser,
+                        Password = cData.GitToken
+                    }
+            };
+
+            Commands.Fetch(repo, "origin", new[] { cData.GitBranch }, fetchOptions, null);
+
+            var localBranch = repo.Branches[cData.GitBranch];
+            if (localBranch == null)
+            {
+                var remoteBranch = repo.Branches[$"origin/{cData.GitBranch}"]
+                    ?? throw new Exception("원격 브랜치 없음");
+
+                localBranch = repo.CreateBranch(cData.GitBranch, remoteBranch.Tip);
+                repo.Branches.Update(localBranch, b => b.TrackedBranch = remoteBranch.CanonicalName);
+            }
+
+            Commands.Checkout(repo, localBranch);
+
+            var pullOptions = new PullOptions { FetchOptions = fetchOptions };
+            var signature = new Signature(cData.GitUser, $"{cData.GitUser}@local", DateTimeOffset.Now);
+
+            Commands.Pull(repo, signature, pullOptions);
+        }
+
         #endregion
 
         #region 사용자 함수
+
+        private void BuildProject(clsData cData)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/c gradlew build -x test",
+                WorkingDirectory = cData.Path,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using var p = Process.Start(psi);
+            p!.WaitForExit();
+
+            if (p.ExitCode != 0)
+                throw new Exception(p.StandardError.ReadToEnd());
+        }
+
         private List<clsData> GetCheckedRows()
         {
             List<clsData> result = new List<clsData>();
