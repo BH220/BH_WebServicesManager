@@ -34,7 +34,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(62, 99);
+            label1.Location = new Point(27, 225);
             label1.Name = "label1";
             label1.Size = new Size(490, 90);
             label1.TabIndex = 0;
@@ -47,7 +47,7 @@
             BackColor = SystemColors.ActiveCaption;
             Controls.Add(label1);
             Name = "ctlSetting";
-            Size = new Size(638, 360);
+            Size = new Size(801, 486);
             ResumeLayout(false);
             PerformLayout();
         }
