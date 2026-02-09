@@ -29,10 +29,17 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             splitContainer1 = new SplitContainer();
             grid = new DataGridView();
+            serviceNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            displayNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            urlDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            gitUserDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            gitTokenDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             clsDataBindingSource = new BindingSource(components);
             txtLog = new TextBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
@@ -44,14 +51,6 @@
             button1 = new Button();
             txtNginxPath = new TextBox();
             label1 = new Label();
-            serviceNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            displayNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            urlDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            gitHubRepoDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            gitHubUrlDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            gitUserDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            gitTokenDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -111,7 +110,7 @@
             grid.AutoGenerateColumns = false;
             grid.BorderStyle = BorderStyle.None;
             grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grid.Columns.AddRange(new DataGridViewColumn[] { serviceNameDataGridViewTextBoxColumn, displayNameDataGridViewTextBoxColumn, urlDataGridViewTextBoxColumn, gitHubRepoDataGridViewTextBoxColumn, gitHubUrlDataGridViewTextBoxColumn, gitUserDataGridViewTextBoxColumn, gitTokenDataGridViewTextBoxColumn, pathDataGridViewTextBoxColumn });
+            grid.Columns.AddRange(new DataGridViewColumn[] { serviceNameDataGridViewTextBoxColumn, displayNameDataGridViewTextBoxColumn, urlDataGridViewTextBoxColumn, gitUserDataGridViewTextBoxColumn, gitTokenDataGridViewTextBoxColumn, pathDataGridViewTextBoxColumn });
             grid.DataSource = clsDataBindingSource;
             grid.Dock = DockStyle.Fill;
             grid.Location = new Point(0, 0);
@@ -122,6 +121,51 @@
             grid.Size = new Size(482, 695);
             grid.TabIndex = 0;
             grid.CellDoubleClick += grid_CellDoubleClick;
+            // 
+            // serviceNameDataGridViewTextBoxColumn
+            // 
+            serviceNameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            serviceNameDataGridViewTextBoxColumn.DataPropertyName = "ServiceName";
+            serviceNameDataGridViewTextBoxColumn.HeaderText = "ServiceName";
+            serviceNameDataGridViewTextBoxColumn.Name = "serviceNameDataGridViewTextBoxColumn";
+            serviceNameDataGridViewTextBoxColumn.Width = 102;
+            // 
+            // displayNameDataGridViewTextBoxColumn
+            // 
+            displayNameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            displayNameDataGridViewTextBoxColumn.DataPropertyName = "DisplayName";
+            displayNameDataGridViewTextBoxColumn.HeaderText = "DisplayName";
+            displayNameDataGridViewTextBoxColumn.Name = "displayNameDataGridViewTextBoxColumn";
+            displayNameDataGridViewTextBoxColumn.Width = 103;
+            // 
+            // urlDataGridViewTextBoxColumn
+            // 
+            urlDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            urlDataGridViewTextBoxColumn.DataPropertyName = "Url";
+            urlDataGridViewTextBoxColumn.HeaderText = "Url";
+            urlDataGridViewTextBoxColumn.MinimumWidth = 200;
+            urlDataGridViewTextBoxColumn.Name = "urlDataGridViewTextBoxColumn";
+            // 
+            // gitUserDataGridViewTextBoxColumn
+            // 
+            gitUserDataGridViewTextBoxColumn.DataPropertyName = "GitUser";
+            gitUserDataGridViewTextBoxColumn.HeaderText = "GitUser";
+            gitUserDataGridViewTextBoxColumn.Name = "gitUserDataGridViewTextBoxColumn";
+            gitUserDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // gitTokenDataGridViewTextBoxColumn
+            // 
+            gitTokenDataGridViewTextBoxColumn.DataPropertyName = "GitToken";
+            gitTokenDataGridViewTextBoxColumn.HeaderText = "GitToken";
+            gitTokenDataGridViewTextBoxColumn.Name = "gitTokenDataGridViewTextBoxColumn";
+            gitTokenDataGridViewTextBoxColumn.Visible = false;
+            // 
+            // pathDataGridViewTextBoxColumn
+            // 
+            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
+            pathDataGridViewTextBoxColumn.HeaderText = "Path";
+            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
+            pathDataGridViewTextBoxColumn.Visible = false;
             // 
             // clsDataBindingSource
             // 
@@ -233,71 +277,13 @@
             label1.Text = "Nginx 경로";
             label1.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // serviceNameDataGridViewTextBoxColumn
-            // 
-            serviceNameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            serviceNameDataGridViewTextBoxColumn.DataPropertyName = "ServiceName";
-            serviceNameDataGridViewTextBoxColumn.HeaderText = "ServiceName";
-            serviceNameDataGridViewTextBoxColumn.Name = "serviceNameDataGridViewTextBoxColumn";
-            serviceNameDataGridViewTextBoxColumn.Width = 102;
-            // 
-            // displayNameDataGridViewTextBoxColumn
-            // 
-            displayNameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            displayNameDataGridViewTextBoxColumn.DataPropertyName = "DisplayName";
-            displayNameDataGridViewTextBoxColumn.HeaderText = "DisplayName";
-            displayNameDataGridViewTextBoxColumn.Name = "displayNameDataGridViewTextBoxColumn";
-            displayNameDataGridViewTextBoxColumn.Width = 103;
-            // 
-            // urlDataGridViewTextBoxColumn
-            // 
-            urlDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            urlDataGridViewTextBoxColumn.DataPropertyName = "Url";
-            urlDataGridViewTextBoxColumn.HeaderText = "Url";
-            urlDataGridViewTextBoxColumn.MinimumWidth = 200;
-            urlDataGridViewTextBoxColumn.Name = "urlDataGridViewTextBoxColumn";
-            // 
-            // gitHubRepoDataGridViewTextBoxColumn
-            // 
-            gitHubRepoDataGridViewTextBoxColumn.DataPropertyName = "GitHubRepo";
-            gitHubRepoDataGridViewTextBoxColumn.HeaderText = "GitHubRepo";
-            gitHubRepoDataGridViewTextBoxColumn.Name = "gitHubRepoDataGridViewTextBoxColumn";
-            gitHubRepoDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // gitHubUrlDataGridViewTextBoxColumn
-            // 
-            gitHubUrlDataGridViewTextBoxColumn.DataPropertyName = "GitHubUrl";
-            gitHubUrlDataGridViewTextBoxColumn.HeaderText = "GitHubUrl";
-            gitHubUrlDataGridViewTextBoxColumn.Name = "gitHubUrlDataGridViewTextBoxColumn";
-            gitHubUrlDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // gitUserDataGridViewTextBoxColumn
-            // 
-            gitUserDataGridViewTextBoxColumn.DataPropertyName = "GitUser";
-            gitUserDataGridViewTextBoxColumn.HeaderText = "GitUser";
-            gitUserDataGridViewTextBoxColumn.Name = "gitUserDataGridViewTextBoxColumn";
-            gitUserDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // gitTokenDataGridViewTextBoxColumn
-            // 
-            gitTokenDataGridViewTextBoxColumn.DataPropertyName = "GitToken";
-            gitTokenDataGridViewTextBoxColumn.HeaderText = "GitToken";
-            gitTokenDataGridViewTextBoxColumn.Name = "gitTokenDataGridViewTextBoxColumn";
-            gitTokenDataGridViewTextBoxColumn.Visible = false;
-            // 
-            // pathDataGridViewTextBoxColumn
-            // 
-            pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
-            pathDataGridViewTextBoxColumn.HeaderText = "Path";
-            pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
-            pathDataGridViewTextBoxColumn.Visible = false;
-            // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1484, 729);
             Controls.Add(tabControl1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmMain";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "nginx + spring boot 3 실행 관리자";
