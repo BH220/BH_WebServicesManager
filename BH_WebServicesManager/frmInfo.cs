@@ -7,15 +7,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BH_WebServicesManager
 {
     public partial class frmInfo : Form
     {
         public clsData Data = null;
+        private List<clsData> list = new List<clsData>();
         public frmInfo()
         {
             InitializeComponent();
+        }
+
+        public frmInfo(List<clsData> list)
+        {
+            InitializeComponent();
+            this.list = list;
         }
 
         public frmInfo(clsData data)
@@ -34,24 +42,36 @@ namespace BH_WebServicesManager
                 txtUrl.Text = Data.Url;
                 txtGitUrl.Text = Data.GitHubUrl;
                 txtGitRepo.Text = Data.GitHubRepo;
-                txtGitToken.Text = Data.GitUser;
+                txtGitToken.Text = Data.GitToken;
+                txtGitUser.Text = Data.GitUser;
                 txtPath.Text = Data.Path;
-                SetEditorsEnabled(false);
-                txtGitToken.Enabled = true;
-                txtGitToken.Focus();
+                SetEditorsReadOnly(true);
+                btnDelete.Visible = true;
             }
             else
             {
-                SetEditorsEnabled(true);
+                btnDelete.Visible = false;
+                SetEditorsReadOnly(false);
             }
         }
 
-        private void SetEditorsEnabled(bool enabled)
+        protected override void OnShown(EventArgs e)
         {
-            Control[] controls = { txtServiceName, txtDisplayName, txtUrl, txtGitUrl, txtGitRepo, txtGitToken, txtPath, btnFind };
+            base.OnShown(e);
+            if (Data != null)
+            {
+                txtGitToken.Focus();
+            }
+        }
+
+        private void SetEditorsReadOnly(bool enabled)
+        {
+            TextBox[] controls = { txtServiceName, txtDisplayName, txtUrl, txtGitUser,
+                txtGitUrl, txtGitRepo};
 
             foreach (var c in controls)
-                c.Enabled = enabled;
+                c.ReadOnly = enabled;
+            btnFind.Enabled = !enabled;
         }
 
         private void btnFind_Click(object sender, EventArgs e)
@@ -78,13 +98,13 @@ namespace BH_WebServicesManager
         {
             var fields = new (TextBox Box, string Name)[]
             {
-        (txtServiceName, "Service Name"),
-        (txtDisplayName, "Display Name"),
-        (txtUrl, "URL"),
-        (txtGitUrl, "GitHub URL"),
-        (txtGitRepo, "GitHub Repository"),
-        (txtGitToken, "Git User"),
-        (txtPath, "Path")
+                (txtServiceName, "Service Name"),
+                (txtDisplayName, "Display Name"),
+                (txtUrl, "URL"),
+                (txtGitUrl, "GitHub URL"),
+                (txtGitRepo, "GitHub Repository"),
+                (txtGitToken, "Git User"),
+                (txtPath, "Path")
             };
 
             foreach (var (box, name) in fields)
@@ -101,6 +121,12 @@ namespace BH_WebServicesManager
                 }
             }
 
+            if (list.Any(x => x.ServiceName.Equals(txtServiceName.Text.Trim(), StringComparison.OrdinalIgnoreCase)))
+            {
+                MessageBox.Show("이미 존재하는 ServiceName 입니다.", "중복", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
             return true;
         }
 
@@ -112,13 +138,14 @@ namespace BH_WebServicesManager
             if (Data == null)
                 Data = new clsData();
 
-            Data.ServiceName = txtServiceName.Text;
-            Data.DisplayName = txtDisplayName.Text;
-            Data.Url = txtUrl.Text;
-            Data.GitHubUrl = txtGitUrl.Text;
-            Data.GitHubRepo = txtGitRepo.Text;
-            Data.GitUser = txtGitToken.Text;
-            Data.Path = txtPath.Text;
+            Data.ServiceName = txtServiceName.Text.Trim();
+            Data.DisplayName = txtDisplayName.Text.Trim();
+            Data.Url = txtUrl.Text.Trim();
+            Data.GitHubUrl = txtGitUrl.Text.Trim();
+            Data.GitHubRepo = txtGitRepo.Text.Trim();
+            Data.GitUser = txtGitUser.Text.Trim();
+            Data.GitToken = txtGitToken.Text.Trim();
+            Data.Path = txtPath.Text.Trim();
 
 
             this.DialogResult = DialogResult.OK;

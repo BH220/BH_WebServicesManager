@@ -1,12 +1,18 @@
+ï»¿using LibGit2Sharp;
 using System.Diagnostics.Eventing.Reader;
+using System.Net.NetworkInformation;
+using System.ServiceProcess;
 using System.Text.Json;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace BH_WebServicesManager
 {
     public partial class frmMain : Form
     {
-        #region º¯¼ö, »ı¼ºÀÚ
+        #region ë³€ìˆ˜, ìƒì„±ì
+        private bool _autoScroll = true;
         public string JsonPath = Application.StartupPath + "DataList.json";
         public frmMain()
         {
@@ -14,16 +20,19 @@ namespace BH_WebServicesManager
         }
         #endregion
 
-        #region ÃÊ±âÈ­ ¿À¹ö¶óÀÌµå
+        #region ì´ˆê¸°í™” ì˜¤ë²„ë¼ì´ë“œ
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             InitGrid();
             LoadData();
+            txtLog.MouseDown += txtLog_MouseDown;
+            txtLog.MouseWheel += txtLog_MouseWheel;
+            txtLog.KeyDown += txtLog_KeyDown;
         }
         #endregion
 
-        #region ±×¸®µå °ü·Ã ÇÔ¼ö
+        #region ê·¸ë¦¬ë“œ ê´€ë ¨ í•¨ìˆ˜
         private void InitGrid()
         {
             var chk = new DataGridViewCheckBoxColumn
@@ -42,9 +51,13 @@ namespace BH_WebServicesManager
 
             headerCheck.CheckedChanged += (s, e) =>
             {
+                // â­ í˜„ì¬ í¸ì§‘ ì¤‘ì¸ ì…€ ê°•ì œ ì»¤ë°‹
+                grid.EndEdit();
+
                 foreach (DataGridViewRow row in grid.Rows)
                 {
-                    row.Cells["colCheck"].Value = headerCheck.Checked;
+                    if (!row.IsNewRow)
+                        row.Cells["colCheck"].Value = headerCheck.Checked;
                 }
             };
 
@@ -61,6 +74,16 @@ namespace BH_WebServicesManager
                     );
                 }
             };
+
+            grid.CellContentClick += (s, e) =>
+            {
+                if (e.RowIndex >= 0 && e.ColumnIndex == grid.Columns["colCheck"].Index)
+                {
+                    grid.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                }
+            };
+
+
         }
 
         private void grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -74,26 +97,75 @@ namespace BH_WebServicesManager
                 return;
 
             using var frm = new frmInfo(data);
-
-            if (frm.ShowDialog(this) == DialogResult.OK)
+            var result = frm.ShowDialog(this);
+            if (result == DialogResult.OK)
             {
-                // Data´Â ÂüÁ¶·Î ³Ñ¾î°¬±â ¶§¹®¿¡
-                // ¿©±â¼­´Â grid »õ·Î°íÄ§¸¸ ÇÏ¸é µÊ
                 grid.Refresh();
+                SaveData();
+            }
+            else if (result == DialogResult.Abort)
+            {
+                DeleteData(frm.Data);
             }
         }
         #endregion
 
-        #region ±âÅ¸ ÀÌº¥Æ®
+        #region ê¸°íƒ€ ì´ë²¤íŠ¸
+        private void txtLog_MouseDown(object sender, MouseEventArgs e)
+        {
+            _autoScroll = false;
+        }
+
+        private void txtLog_MouseWheel(object sender, MouseEventArgs e)
+        {
+            _autoScroll = false;
+        }
+
+        private void txtLog_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // ì½˜ì†”ì²˜ëŸ¼ Enter ëˆ„ë¥´ë©´ ë‹¤ì‹œ ë§¨ ì•„ë˜ë¡œ
+                _autoScroll = true;
+                txtLog.SelectionStart = txtLog.TextLength;
+                txtLog.ScrollToCaret();
+            }
+            else
+            {
+                _autoScroll = false;
+            }
+        }
         #endregion
 
-        #region ¹öÆ°ÀÌº¥Æ®
+        #region ë²„íŠ¼ì´ë²¤íŠ¸
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            using var dialog = new FolderBrowserDialog
+            {
+                Description = "Nginx í´ë”ë¥¼ ì„ íƒí•˜ì„¸ìš”",
+                UseDescriptionForTitle = true,
+                ShowNewFolderButton = false
+            };
+
+            if (!string.IsNullOrWhiteSpace(txtNginxPath.Text) &&
+                Directory.Exists(txtNginxPath.Text))
+            {
+                dialog.SelectedPath = txtNginxPath.Text;
+            }
+
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+                txtNginxPath.Text = dialog.SelectedPath;
+            }
+        }
+
         private void btnStop_Click(object sender, EventArgs e)
         {
             List<clsData> selectedRows = GetCheckedRows();
             if (selectedRows.Count == 0)
             {
-                MessageBox.Show("¼±ÅÃµÈ Ç×¸ñÀÌ ¾ø½À´Ï´Ù.", "¾Ë¸²", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("ì„ íƒëœ í•­ëª©ì´ ì—†ìŠµë‹ˆë‹¤.", "ì•Œë¦¼", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
         }
@@ -103,9 +175,13 @@ namespace BH_WebServicesManager
             List<clsData> selectedRows = GetCheckedRows();
             if (selectedRows.Count == 0)
             {
-                MessageBox.Show("¼±ÅÃµÈ Ç×¸ñÀÌ ¾ø½À´Ï´Ù.", "¾Ë¸²", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("ì„ íƒëœ í•­ëª©ì´ ì—†ìŠµë‹ˆë‹¤.", "ì•Œë¦¼", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            //ì„œë¹„ìŠ¤ ìˆëŠ”ì§€ í™•ì¸í•˜ê³  ì—†ìœ¼ë©´ ìƒì„±
+            //ì„œë¹„ìŠ¤ ì¬ì‹œì‘
+            //ì„œë¹„ìŠ¤ ìˆëŠ”ì§€ í™•ì¸í•´ì„œ ì—†ìœ¼ë©´ ìƒì„±
+
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -129,13 +205,37 @@ namespace BH_WebServicesManager
             List<clsData> selectedRows = GetCheckedRows();
             if (selectedRows.Count == 0)
             {
-                MessageBox.Show("¼±ÅÃµÈ Ç×¸ñÀÌ ¾ø½À´Ï´Ù.", "¾Ë¸²", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("ì„ íƒëœ í•­ëª©ì´ ì—†ìŠµë‹ˆë‹¤.", "ì•Œë¦¼", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            clsData cData = selectedRows[0];
+            Log($"[{cData.DisplayName}] ì½”ë“œ ì—…ë°ì´íŠ¸");
+            Log($"[{cData.ServiceName}] ì„ ê²€ìƒ‰í•©ë‹ˆë‹¤.");
+            ServiceController sv = GetServiceByName(cData.ServiceName);
+            if (sv != null)
+            {
+                if (sv.Status != ServiceControllerStatus.Stopped &&
+                    sv.Status != ServiceControllerStatus.StopPending)
+                {
+                    sv.Stop();
+                }
+
+                // ì¤‘ì§€ë  ë•Œê¹Œì§€ ëŒ€ê¸° (ì˜ˆ: ìµœëŒ€ 30ì´ˆ)
+                sv.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
+            }
+            //cData.Path ê°€ ê¹ƒ ì €ì¥ì†Œë©´ ë„˜ì–´ê°€ê³  ì•„ë‹ˆë©´ ì—¬ê¸°ì— í´ë¡ 
+            //
+            //ê¹ƒì—ì„œ ì½”ë“œ ê°€ì ¸ì™€
+            //ë¹Œë“œí•´
         }
         #endregion
 
-        #region »ç¿ëÀÚ ÇÔ¼ö
+        #region ê¹ƒ ê´€ë ¨ 
+
+        
+        #endregion
+
+        #region ì‚¬ìš©ì í•¨ìˆ˜
         private List<clsData> GetCheckedRows()
         {
             List<clsData> result = new List<clsData>();
@@ -156,9 +256,35 @@ namespace BH_WebServicesManager
             return result;
         }
 
+        private void Log(string text)
+        {
+            if (txtLog.InvokeRequired)
+            {
+                txtLog.BeginInvoke(new Action<string>(Log), text);
+                return;
+            }
+
+            txtLog.AppendText(text + Environment.NewLine);
+
+            if (_autoScroll)
+            {
+                txtLog.SelectionStart = txtLog.TextLength;
+                txtLog.ScrollToCaret();
+            }
+        }
+
+        public ServiceController? GetServiceByName(string serviceName)
+        {
+            if (string.IsNullOrWhiteSpace(serviceName))
+                return null;
+
+            return ServiceController.GetServices()
+                .FirstOrDefault(s =>
+                    string.Equals(s.ServiceName, serviceName, StringComparison.OrdinalIgnoreCase));
+        }
         #endregion
 
-        #region µ¥ÀÌÅÍ Ã³¸®
+        #region ë°ì´í„° ì²˜ë¦¬
 
         private void LoadData()
         {
@@ -178,7 +304,7 @@ namespace BH_WebServicesManager
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("µ¥ÀÌÅÍ ·Îµå Áß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù.\n" + ex.Message, "¿À·ù", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("ë°ì´í„° ë¡œë“œ ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤.\n" + ex.Message, "ì˜¤ë¥˜", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -192,8 +318,46 @@ namespace BH_WebServicesManager
                 list.Add(data);
                 clsDataBindingSource.ResetBindings(false);
                 SaveData();
+                FocusRowByServiceName(data.ServiceName, true);
+                btnUpdate_Click(null, null);
+                btnRun_Click(null, null);
             }
         }
+
+        private void FocusRowByServiceName(string serviceName, bool run)
+        {
+            if (string.IsNullOrWhiteSpace(serviceName))
+                return;
+
+            if (run)
+            {
+                // 1. ëª¨ë“  ì²´í¬ë°•ìŠ¤ í•´ì œ
+                foreach (DataGridViewRow r in grid.Rows)
+                {
+                    if (!r.IsNewRow)
+                        r.Cells["colCheck"].Value = false;
+                }
+            }
+
+            foreach (DataGridViewRow row in grid.Rows)
+            {
+                if (row.DataBoundItem is clsData d &&
+                    string.Equals(d.ServiceName, serviceName, StringComparison.OrdinalIgnoreCase))
+                {
+                    grid.ClearSelection();
+                    row.Selected = true;
+                    grid.CurrentCell = row.Cells[grid.Columns["serviceNameDataGridViewTextBoxColumn"].Index];
+                    grid.FirstDisplayedScrollingRowIndex = row.Index;
+
+                    // 2. í•´ë‹¹ í–‰ë§Œ ì²´í¬
+                    if (run)
+                        row.Cells["colCheck"].Value = true;
+
+                    break;
+                }
+            }
+        }
+
 
         private void DeleteData(clsData data)
         {

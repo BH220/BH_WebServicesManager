@@ -31,15 +31,19 @@
             components = new System.ComponentModel.Container();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
-            panel1 = new Panel();
-            textBox2 = new TextBox();
+            splitContainer1 = new SplitContainer();
+            grid = new DataGridView();
+            clsDataBindingSource = new BindingSource(components);
+            txtLog = new TextBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
             btnRun = new Button();
             btnStop = new Button();
             btnAdd = new Button();
             btnUpdate = new Button();
-            panel2 = new Panel();
-            grid = new DataGridView();
+            tabPage2 = new TabPage();
+            button1 = new Button();
+            txtNginxPath = new TextBox();
+            label1 = new Label();
             serviceNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             displayNameDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             urlDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -48,18 +52,15 @@
             gitUserDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             gitTokenDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             pathDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            clsDataBindingSource = new BindingSource(components);
-            tabPage2 = new TabPage();
-            button1 = new Button();
-            textBox1 = new TextBox();
-            label1 = new Label();
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
-            panel1.SuspendLayout();
-            flowLayoutPanel1.SuspendLayout();
-            panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)grid).BeginInit();
             ((System.ComponentModel.ISupportInitialize)clsDataBindingSource).BeginInit();
+            flowLayoutPanel1.SuspendLayout();
             tabPage2.SuspendLayout();
             SuspendLayout();
             // 
@@ -71,44 +72,73 @@
             tabControl1.Location = new Point(0, 0);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(950, 530);
+            tabControl1.Size = new Size(1484, 729);
             tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
-            tabPage1.Controls.Add(panel1);
-            tabPage1.Controls.Add(panel2);
+            tabPage1.Controls.Add(splitContainer1);
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(942, 502);
+            tabPage1.Size = new Size(1476, 701);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "대시보드";
             tabPage1.UseVisualStyleBackColor = true;
             // 
-            // panel1
+            // splitContainer1
             // 
-            panel1.Controls.Add(textBox2);
-            panel1.Controls.Add(flowLayoutPanel1);
-            panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(449, 3);
-            panel1.Name = "panel1";
-            panel1.Padding = new Padding(5);
-            panel1.Size = new Size(490, 496);
-            panel1.TabIndex = 1;
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(3, 3);
+            splitContainer1.Name = "splitContainer1";
             // 
-            // textBox2
+            // splitContainer1.Panel1
             // 
-            textBox2.BackColor = SystemColors.ActiveCaptionText;
-            textBox2.Dock = DockStyle.Fill;
-            textBox2.ForeColor = SystemColors.Window;
-            textBox2.Location = new Point(5, 35);
-            textBox2.Multiline = true;
-            textBox2.Name = "textBox2";
-            textBox2.ReadOnly = true;
-            textBox2.ScrollBars = ScrollBars.Both;
-            textBox2.Size = new Size(480, 456);
-            textBox2.TabIndex = 1;
+            splitContainer1.Panel1.Controls.Add(grid);
+            // 
+            // splitContainer1.Panel2
+            // 
+            splitContainer1.Panel2.Controls.Add(txtLog);
+            splitContainer1.Panel2.Controls.Add(flowLayoutPanel1);
+            splitContainer1.Size = new Size(1470, 695);
+            splitContainer1.SplitterDistance = 482;
+            splitContainer1.TabIndex = 1;
+            // 
+            // grid
+            // 
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AutoGenerateColumns = false;
+            grid.BorderStyle = BorderStyle.None;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grid.Columns.AddRange(new DataGridViewColumn[] { serviceNameDataGridViewTextBoxColumn, displayNameDataGridViewTextBoxColumn, urlDataGridViewTextBoxColumn, gitHubRepoDataGridViewTextBoxColumn, gitHubUrlDataGridViewTextBoxColumn, gitUserDataGridViewTextBoxColumn, gitTokenDataGridViewTextBoxColumn, pathDataGridViewTextBoxColumn });
+            grid.DataSource = clsDataBindingSource;
+            grid.Dock = DockStyle.Fill;
+            grid.Location = new Point(0, 0);
+            grid.Name = "grid";
+            grid.RowHeadersVisible = false;
+            grid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.Size = new Size(482, 695);
+            grid.TabIndex = 0;
+            grid.CellDoubleClick += grid_CellDoubleClick;
+            // 
+            // clsDataBindingSource
+            // 
+            clsDataBindingSource.DataSource = typeof(clsData);
+            // 
+            // txtLog
+            // 
+            txtLog.BackColor = SystemColors.ActiveCaptionText;
+            txtLog.Dock = DockStyle.Fill;
+            txtLog.ForeColor = SystemColors.Window;
+            txtLog.Location = new Point(0, 30);
+            txtLog.Multiline = true;
+            txtLog.Name = "txtLog";
+            txtLog.ReadOnly = true;
+            txtLog.ScrollBars = ScrollBars.Both;
+            txtLog.Size = new Size(984, 665);
+            txtLog.TabIndex = 1;
             // 
             // flowLayoutPanel1
             // 
@@ -117,9 +147,9 @@
             flowLayoutPanel1.Controls.Add(btnAdd);
             flowLayoutPanel1.Controls.Add(btnUpdate);
             flowLayoutPanel1.Dock = DockStyle.Top;
-            flowLayoutPanel1.Location = new Point(5, 5);
+            flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(480, 30);
+            flowLayoutPanel1.Size = new Size(984, 30);
             flowLayoutPanel1.TabIndex = 2;
             // 
             // btnRun
@@ -162,51 +192,69 @@
             btnUpdate.UseVisualStyleBackColor = true;
             btnUpdate.Click += btnUpdate_Click;
             // 
-            // panel2
+            // tabPage2
             // 
-            panel2.Controls.Add(grid);
-            panel2.Dock = DockStyle.Left;
-            panel2.Location = new Point(3, 3);
-            panel2.Name = "panel2";
-            panel2.Padding = new Padding(5);
-            panel2.Size = new Size(446, 496);
-            panel2.TabIndex = 2;
+            tabPage2.Controls.Add(button1);
+            tabPage2.Controls.Add(txtNginxPath);
+            tabPage2.Controls.Add(label1);
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Padding = new Padding(3);
+            tabPage2.Size = new Size(1476, 701);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "설정";
+            tabPage2.UseVisualStyleBackColor = true;
             // 
-            // grid
+            // button1
             // 
-            grid.AllowUserToAddRows = false;
-            grid.AllowUserToDeleteRows = false;
-            grid.AutoGenerateColumns = false;
-            grid.BorderStyle = BorderStyle.None;
-            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            grid.Columns.AddRange(new DataGridViewColumn[] { serviceNameDataGridViewTextBoxColumn, displayNameDataGridViewTextBoxColumn, urlDataGridViewTextBoxColumn, gitHubRepoDataGridViewTextBoxColumn, gitHubUrlDataGridViewTextBoxColumn, gitUserDataGridViewTextBoxColumn, gitTokenDataGridViewTextBoxColumn, pathDataGridViewTextBoxColumn });
-            grid.DataSource = clsDataBindingSource;
-            grid.Dock = DockStyle.Fill;
-            grid.Location = new Point(5, 5);
-            grid.Name = "grid";
-            grid.RowHeadersVisible = false;
-            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            grid.Size = new Size(436, 486);
-            grid.TabIndex = 0;
-            grid.CellDoubleClick += grid_CellDoubleClick;
+            button1.Location = new Point(114, 6);
+            button1.Name = "button1";
+            button1.Size = new Size(54, 23);
+            button1.TabIndex = 2;
+            button1.Text = "Folder";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // txtNginxPath
+            // 
+            txtNginxPath.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtNginxPath.Location = new Point(174, 6);
+            txtNginxPath.Name = "txtNginxPath";
+            txtNginxPath.Size = new Size(610, 23);
+            txtNginxPath.TabIndex = 1;
+            // 
+            // label1
+            // 
+            label1.Location = new Point(8, 6);
+            label1.Margin = new Padding(3);
+            label1.Name = "label1";
+            label1.Size = new Size(100, 23);
+            label1.TabIndex = 0;
+            label1.Text = "Nginx 경로";
+            label1.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // serviceNameDataGridViewTextBoxColumn
             // 
+            serviceNameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             serviceNameDataGridViewTextBoxColumn.DataPropertyName = "ServiceName";
             serviceNameDataGridViewTextBoxColumn.HeaderText = "ServiceName";
             serviceNameDataGridViewTextBoxColumn.Name = "serviceNameDataGridViewTextBoxColumn";
+            serviceNameDataGridViewTextBoxColumn.Width = 102;
             // 
             // displayNameDataGridViewTextBoxColumn
             // 
+            displayNameDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             displayNameDataGridViewTextBoxColumn.DataPropertyName = "DisplayName";
             displayNameDataGridViewTextBoxColumn.HeaderText = "DisplayName";
             displayNameDataGridViewTextBoxColumn.Name = "displayNameDataGridViewTextBoxColumn";
+            displayNameDataGridViewTextBoxColumn.Width = 103;
             // 
             // urlDataGridViewTextBoxColumn
             // 
             urlDataGridViewTextBoxColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             urlDataGridViewTextBoxColumn.DataPropertyName = "Url";
             urlDataGridViewTextBoxColumn.HeaderText = "Url";
+            urlDataGridViewTextBoxColumn.MinimumWidth = 200;
             urlDataGridViewTextBoxColumn.Name = "urlDataGridViewTextBoxColumn";
             // 
             // gitHubRepoDataGridViewTextBoxColumn
@@ -244,66 +292,25 @@
             pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
             pathDataGridViewTextBoxColumn.Visible = false;
             // 
-            // clsDataBindingSource
-            // 
-            clsDataBindingSource.DataSource = typeof(clsData);
-            // 
-            // tabPage2
-            // 
-            tabPage2.Controls.Add(button1);
-            tabPage2.Controls.Add(textBox1);
-            tabPage2.Controls.Add(label1);
-            tabPage2.Location = new Point(4, 24);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(942, 502);
-            tabPage2.TabIndex = 1;
-            tabPage2.Text = "설정";
-            tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            button1.Location = new Point(114, 6);
-            button1.Name = "button1";
-            button1.Size = new Size(54, 23);
-            button1.TabIndex = 2;
-            button1.Text = "Folder";
-            button1.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textBox1.Location = new Point(174, 6);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(610, 23);
-            textBox1.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.Location = new Point(8, 6);
-            label1.Margin = new Padding(3);
-            label1.Name = "label1";
-            label1.Size = new Size(100, 23);
-            label1.TabIndex = 0;
-            label1.Text = "Nginx 경로";
-            label1.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(950, 530);
+            ClientSize = new Size(1484, 729);
             Controls.Add(tabControl1);
             Name = "frmMain";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "nginx + spring boot 3 실행 관리자";
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
-            flowLayoutPanel1.ResumeLayout(false);
-            panel2.ResumeLayout(false);
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)grid).EndInit();
             ((System.ComponentModel.ISupportInitialize)clsDataBindingSource).EndInit();
+            flowLayoutPanel1.ResumeLayout(false);
             tabPage2.ResumeLayout(false);
             tabPage2.PerformLayout();
             ResumeLayout(false);
@@ -315,26 +322,25 @@
         private TabPage tabPage1;
         private TabPage tabPage2;
         private Button button1;
-        private TextBox textBox1;
+        private TextBox txtNginxPath;
         private Label label1;
         private DataGridView grid;
-        private Panel panel1;
         private Button btnRun;
         private Button btnUpdate;
         private Button btnAdd;
         private Button btnStop;
-        private TextBox textBox2;
+        private TextBox txtLog;
         private BindingSource clsDataBindingSource;
+        private DataGridViewTextBoxColumn serviceDisplayNameDataGridViewTextBoxColumn;
+        private FlowLayoutPanel flowLayoutPanel1;
+        private SplitContainer splitContainer1;
         private DataGridViewTextBoxColumn serviceNameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn displayNameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn urlDataGridViewTextBoxColumn;
-        private DataGridViewTextBoxColumn serviceDisplayNameDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn gitHubRepoDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn gitHubUrlDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn gitUserDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn gitTokenDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn pathDataGridViewTextBoxColumn;
-        private FlowLayoutPanel flowLayoutPanel1;
-        private Panel panel2;
     }
 }
