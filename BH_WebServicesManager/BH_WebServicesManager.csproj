@@ -1,36 +1,52 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>MainIcon.ico</ApplicationIcon>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<ApplicationIcon>MainIcon.ico</ApplicationIcon>
 
-  <ItemGroup>
-    <Content Include="MainIcon.ico" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="LibGit2Sharp" Version="0.31.0" />
-    <PackageReference Include="System.ServiceProcess.ServiceController" Version="10.0.2" />
-  </ItemGroup>
+		<!-- ClickOnce 기본 설정 -->
+		<GenerateManifests>true</GenerateManifests>
+		<PublishUrl>publish\</PublishUrl>
+		<Install>true</Install>
+		<InstallFrom>Web</InstallFrom>
+		<UpdateEnabled>true</UpdateEnabled>
+		<UpdateMode>Foreground</UpdateMode>
+		<UpdateInterval>7</UpdateInterval>
+		<UpdateIntervalUnits>Days</UpdateIntervalUnits>
 
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
+		<ApplicationVersion>1.0.0.0</ApplicationVersion>
+		<ApplicationRevision>1</ApplicationRevision>
+		<IsRevisionIncremented>true</IsRevisionIncremented>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="MainIcon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LibGit2Sharp" Version="0.31.0" />
+		<PackageReference Include="System.ServiceProcess.ServiceController" Version="10.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
 
 </Project>
